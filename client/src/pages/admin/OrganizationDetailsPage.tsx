@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '../../components/Card';
 import { SectionHeader } from '../../components/SectionHeader';
 import { StatCard } from '../../components/StatCard';
 import { StatusBadge } from '../../components/StatusBadge';
-import { courses, organizations, subscribers, subscriptions } from '../../data/mockData';
+import { useData } from '../../data/DataContext';
 import { formatDate } from '../../utils/date';
 
 const getToneByStatus = (status: string) => {
@@ -23,7 +23,16 @@ const getToneByStatus = (status: string) => {
 export const OrganizationDetailsPage = () => {
   const params = useParams();
   const organizationId = Number(params.organizationId ?? 0);
+  const { organizations, courses, subscribers, subscriptions, addGroup } = useData();
   const organization = organizations.find((org) => org.id === organizationId);
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [groupForm, setGroupForm] = useState({
+    name: '',
+    description: '',
+    managerName: '',
+    managerEmail: ''
+  });
+  const [groupFeedback, setGroupFeedback] = useState<string | null>(null);
 
   const computed = useMemo(() => {
     const orgSubscribers = subscribers.filter((subscriber) => subscriber.organizationId === organizationId);
@@ -42,7 +51,26 @@ export const OrganizationDetailsPage = () => {
       pausedSubscribers,
       orgSubscriptions
     };
-  }, [organizationId]);
+  }, [organizationId, subscribers, subscriptions]);
+
+  const resetGroupForm = () => {
+    setGroupForm({ name: '', description: '', managerName: '', managerEmail: '' });
+  };
+
+  const handleAddGroup = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!organization) {
+      return;
+    }
+    if (!groupForm.name.trim()) {
+      return;
+    }
+
+    addGroup(organization.id, groupForm);
+    setGroupFeedback(`הקבוצה "${groupForm.name}" נוספה בהצלחה`);
+    resetGroupForm();
+    setIsAddingGroup(false);
+  };
 
   if (!organization) {
     return (
@@ -94,22 +122,101 @@ export const OrganizationDetailsPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
         <Card title="קבוצות בארגון">
-          <ul className="space-y-4">
-            {organization.groups.map((group) => {
-              const manager = organization.users.find((user) => user.id === group.managerId);
-              const count = computed.orgSubscribers.filter((subscriber) => subscriber.groupId === group.id).length;
-              return (
-                <li key={group.id} className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">{group.name}</p>
-                    <p className="text-xs text-slate-500">מנהל/ת: {manager?.name ?? 'לא הוגדר'}</p>
-                    <p className="text-xs text-slate-500">{group.description}</p>
-                  </div>
-                  <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{count} מנויים</div>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-slate-600">
+              <span>ניהול קבוצות וקהלים בארגון</span>
+              <button
+                onClick={() => {
+                  setGroupFeedback(null);
+                  setIsAddingGroup((prev) => !prev);
+                }}
+                className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-primary/90"
+              >
+                {isAddingGroup ? 'סגירת טופס' : 'קבוצה חדשה'}
+              </button>
+            </div>
+            {groupFeedback ? (
+              <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-700">{groupFeedback}</div>
+            ) : null}
+            {isAddingGroup ? (
+              <form onSubmit={handleAddGroup} className="grid gap-3">
+                <div className="grid gap-3 md:grid-cols-2">
+                  <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
+                    שם הקבוצה
+                    <input
+                      required
+                      value={groupForm.name}
+                      onChange={(event) => setGroupForm((prev) => ({ ...prev, name: event.target.value }))}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-700 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      placeholder="לדוגמה: צוות מוצר"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
+                    תיאור (לא חובה)
+                    <input
+                      value={groupForm.description}
+                      onChange={(event) => setGroupForm((prev) => ({ ...prev, description: event.target.value }))}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-700 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      placeholder="מה מטרת הקבוצה"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
+                    מנהל/ת קבוצה (לא חובה)
+                    <input
+                      value={groupForm.managerName}
+                      onChange={(event) => setGroupForm((prev) => ({ ...prev, managerName: event.target.value }))}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-700 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      placeholder="לדוגמה: עדן לוי"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs font-semibold text-slate-600">
+                    אימייל מנהל/ת (לא חובה)
+                    <input
+                      type="email"
+                      value={groupForm.managerEmail}
+                      onChange={(event) => setGroupForm((prev) => ({ ...prev, managerEmail: event.target.value }))}
+                      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-slate-700 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      placeholder="eden@example.com"
+                    />
+                  </label>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      resetGroupForm();
+                      setIsAddingGroup(false);
+                    }}
+                    className="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+                  >
+                    ביטול
+                  </button>
+                  <button
+                    type="submit"
+                    className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-primary/90"
+                  >
+                    שמירת קבוצה
+                  </button>
+                </div>
+              </form>
+            ) : null}
+            <ul className="space-y-4">
+              {organization.groups.map((group) => {
+                const manager = organization.users.find((user) => user.id === group.managerId);
+                const count = computed.orgSubscribers.filter((subscriber) => subscriber.groupId === group.id).length;
+                return (
+                  <li key={group.id} className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800">{group.name}</p>
+                      <p className="text-xs text-slate-500">מנהל/ת: {manager?.name ?? 'לא הוגדר'}</p>
+                      <p className="text-xs text-slate-500">{group.description}</p>
+                    </div>
+                    <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{count} מנויים</div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </Card>
         <Card title="קורסים משויכים">
           <ul className="space-y-3">

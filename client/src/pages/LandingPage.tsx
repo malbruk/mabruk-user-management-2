@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { organizations, subscribers, courses } from '../data/mockData';
+import { useData } from '../data/DataContext';
 
 const quickLinks = [
   {
@@ -20,6 +20,8 @@ const quickLinks = [
 ];
 
 export const LandingPage = () => {
+  const { organizations, subscribers, courses } = useData();
+
   return (
     <div className="space-y-10">
       <section className="rounded-2xl bg-gradient-to-r from-primary to-secondary px-10 py-12 text-white shadow-lg">

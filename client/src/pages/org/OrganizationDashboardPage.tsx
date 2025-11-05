@@ -4,7 +4,7 @@ import { Card } from '../../components/Card';
 import { SectionHeader } from '../../components/SectionHeader';
 import { StatCard } from '../../components/StatCard';
 import { StatusBadge } from '../../components/StatusBadge';
-import { courses, organizations, subscribers, subscriptions } from '../../data/mockData';
+import { useData } from '../../data/DataContext';
 import { formatDate } from '../../utils/date';
 
 const statusLabels: Record<string, string> = {
@@ -35,7 +35,15 @@ const getFilterLabel = (filter: string | null) => {
 export const OrganizationDashboardPage = () => {
   const params = useParams();
   const organizationId = Number(params.organizationId ?? 0) || 1;
+  const { organizations, subscribers, subscriptions, courses } = useData();
   const organization = organizations.find((org) => org.id === organizationId) ?? organizations[0];
+  if (!organization) {
+    return (
+      <div className="space-y-4">
+        <p className="text-lg font-semibold text-slate-800">לא נמצאו ארגונים זמינים.</p>
+      </div>
+    );
+  }
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const computed = useMemo(() => {
@@ -56,7 +64,7 @@ export const OrganizationDashboardPage = () => {
       orgSubscriptions,
       activeCourses
     };
-  }, [organization.id, statusFilter]);
+  }, [organization.id, statusFilter, subscribers, subscriptions, courses]);
 
   const counts = useMemo(() => {
     const totals = {

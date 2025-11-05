@@ -1,7 +1,7 @@
 import { Card } from '../../components/Card';
 import { SectionHeader } from '../../components/SectionHeader';
 import { StatCard } from '../../components/StatCard';
-import { organizations, subscribers } from '../../data/mockData';
+import { useData } from '../../data/DataContext';
 
 const churnRate = 4.7;
 const avgCoursesPerSubscriber = 2.1;
@@ -26,6 +26,8 @@ const insights = [
 ];
 
 export const InsightsPage = () => {
+  const { organizations, subscribers } = useData();
+
   return (
     <div className="space-y-10">
       <SectionHeader
