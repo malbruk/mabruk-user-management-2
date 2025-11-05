@@ -167,16 +167,16 @@ export const OrganizationDashboardPage = () => {
 
         <Card>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
+            <table className="min-w-full text-right text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-wider text-slate-500">
-                  <th className="px-3 pb-3">שם מלא</th>
-                  <th className="px-3 pb-3">אימייל</th>
-                  <th className="px-3 pb-3">קבוצה</th>
-                  <th className="px-3 pb-3">סטטוס</th>
-                  <th className="px-3 pb-3">התחלה</th>
-                  <th className="px-3 pb-3">סיום</th>
-                  <th className="px-3 pb-3">קורסים פעילים</th>
+                  <th className="px-3 pb-3 text-right">שם מלא</th>
+                  <th className="px-3 pb-3 text-right">אימייל</th>
+                  <th className="px-3 pb-3 text-right">קבוצה</th>
+                  <th className="px-3 pb-3 text-left">סטטוס</th>
+                  <th className="px-3 pb-3 text-right">התחלה</th>
+                  <th className="px-3 pb-3 text-right">סיום</th>
+                  <th className="px-3 pb-3 text-right">קורסים פעילים</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -192,7 +192,7 @@ export const OrganizationDashboardPage = () => {
                       <td className="px-3 py-3 text-slate-800">{subscriber.fullName}</td>
                       <td className="px-3 py-3 text-slate-600">{subscriber.email}</td>
                       <td className="px-3 py-3 text-slate-600">{group?.name ?? '—'}</td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 text-left">
                         <StatusBadge label={statusLabels[subscriber.status]} tone={statusTone[subscriber.status]} />
                       </td>
                       <td className="px-3 py-3 text-slate-600">{formatDate(subscriber.startDate)}</td>

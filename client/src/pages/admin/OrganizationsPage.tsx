@@ -52,16 +52,16 @@ export const OrganizationsPage = () => {
         />
         <Card>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
+            <table className="min-w-full text-right text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-wider text-slate-500">
-                  <th className="px-3 pb-3">שם</th>
-                  <th className="px-3 pb-3">נוצר בתאריך</th>
-                  <th className="px-3 pb-3">קבוצות</th>
-                  <th className="px-3 pb-3">קורסים זמינים</th>
-                  <th className="px-3 pb-3">מנויים פעילים</th>
-                  <th className="px-3 pb-3">סה"כ מנויים</th>
-                  <th className="px-3 pb-3 text-right">פעולות</th>
+                  <th className="px-3 pb-3 text-right">שם</th>
+                  <th className="px-3 pb-3 text-right">נוצר בתאריך</th>
+                  <th className="px-3 pb-3 text-right">קבוצות</th>
+                  <th className="px-3 pb-3 text-right">קורסים זמינים</th>
+                  <th className="px-3 pb-3 text-right">מנויים פעילים</th>
+                  <th className="px-3 pb-3 text-right">סה"כ מנויים</th>
+                  <th className="px-3 pb-3 text-left">פעולות</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -78,7 +78,7 @@ export const OrganizationsPage = () => {
                       <td className="px-3 py-3 text-slate-600">{organization.courseIds.length}</td>
                       <td className="px-3 py-3 text-slate-600">{summary.activeCount}</td>
                       <td className="px-3 py-3 text-slate-600">{summary.totalSubscribers}</td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 text-left">
                         <div className="flex justify-end gap-2">
                           <Link
                             to={`/admin/organizations/${organization.id}`}

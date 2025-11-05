@@ -135,16 +135,16 @@ export const OrganizationDetailsPage = () => {
         <SectionHeader title="מנויים בארגון" description="רשימת משתמשי הקצה ושיוכי הקורסים שלהם." />
         <Card>
           <div className="overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
+            <table className="min-w-full text-right text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-wider text-slate-500">
-                  <th className="px-3 pb-3">שם</th>
-                  <th className="px-3 pb-3">אימייל</th>
-                  <th className="px-3 pb-3">קבוצה</th>
-                  <th className="px-3 pb-3">סטטוס</th>
-                  <th className="px-3 pb-3">תאריך התחלה</th>
-                  <th className="px-3 pb-3">תאריך סיום</th>
-                  <th className="px-3 pb-3">קורסים</th>
+                  <th className="px-3 pb-3 text-right">שם</th>
+                  <th className="px-3 pb-3 text-right">אימייל</th>
+                  <th className="px-3 pb-3 text-right">קבוצה</th>
+                  <th className="px-3 pb-3 text-left">סטטוס</th>
+                  <th className="px-3 pb-3 text-right">תאריך התחלה</th>
+                  <th className="px-3 pb-3 text-right">תאריך סיום</th>
+                  <th className="px-3 pb-3 text-right">קורסים</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -160,7 +160,7 @@ export const OrganizationDetailsPage = () => {
                       <td className="px-3 py-3 text-slate-800">{subscriber.fullName}</td>
                       <td className="px-3 py-3 text-slate-600">{subscriber.email}</td>
                       <td className="px-3 py-3 text-slate-600">{group?.name ?? 'לא משויך'}</td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 text-left">
                         <StatusBadge label={subscriber.status} tone={getToneByStatus(subscriber.status)} />
                       </td>
                       <td className="px-3 py-3 text-slate-600">{formatDate(subscriber.startDate)}</td>
