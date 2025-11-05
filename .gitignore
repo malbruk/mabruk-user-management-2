@@ -49,7 +49,7 @@ CodeCoverage/
 *.binlog
 
 # MSTest test Results
-[TestResult]*/
+TestResult*/
 [BuildLog].*
 
 # NUnit

@@ -1,6 +1,9 @@
 # Mabruk User Management Prototype
 
-This repository hosts exploration assets for the Mabruk user-management platform. It now includes a React client prototype backed by mock data that mirrors the UI wireframes in `docs/ui-sketch.md`.
+This repository hosts exploration assets for the Mabruk user-management platform. It now includes:
+
+- A React client prototype backed by mock data that mirrors the UI wireframes in `docs/ui-sketch.md`.
+- A .NET 8 Web API project that exposes endpoints aligned with the existing Supabase/PostgreSQL schema.
 
 ## Client application
 
@@ -27,6 +30,35 @@ npm run preview   # serves the production build locally
 ```
 
 > **Note:** The project uses static mock data and does not communicate with the .NET backend yet.
+
+## Server application
+
+The `server/src` directory contains an ASP.NET Core Web API (`net8.0`) that implements CRUD operations and filtered queries for organizations, groups, courses, subscribers, subscriptions, and course assignments according to the Supabase schema.
+
+### Prerequisites
+
+- .NET SDK 8.0+
+- PostgreSQL database that matches the Supabase schema provided earlier
+
+### Configuration
+
+Set the `DefaultConnection` string in `server/src/appsettings.json` (or via environment variables) to point to your Supabase-managed Postgres instance. The Supabase authentication section expects the standard values:
+
+- `Supabase:ProjectRef` – your Supabase project reference (e.g., `abcxyz`)
+- `Supabase:Url` – `https://<projectRef>.supabase.co`
+- `Supabase:Audience` – usually the same as the project reference
+
+When Supabase Google authentication is enabled, the API validates incoming JWTs issued by Supabase using the configured authority and audience. Endpoints require authentication by default, except for `/health` and Swagger UI in development.
+
+### Running locally
+
+```bash
+cd server/src
+dotnet restore
+dotnet run
+```
+
+The API will be available on `https://localhost:7144` (Swagger UI opens automatically in development). Use the exposed routes to manage organizations, assign courses, and control subscribers/subscriptions while staying faithful to the database schema.
 
 ## Documentation
 
