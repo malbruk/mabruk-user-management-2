@@ -59,7 +59,7 @@ export const OrganizationsPage = () => {
           accent="secondary"
         />
         <StatCard
-          title="סה"נ מנויים"
+          title="סך הכל מנויים"
           value={subscribers.length}
           subtitle="כולל מנויים פעילים, תקופת ניסיון ומושהים"
           accent="accent"
