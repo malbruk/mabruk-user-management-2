@@ -36,6 +36,10 @@ ScaffoldingReadMe.txt
 # NuGet Symbol Packages
 *.snupkg
 
+# Node / React
+client/node_modules/
+client/dist/
+
 # Others
 ~$*
 *~
@@ -45,8 +49,8 @@ CodeCoverage/
 *.binlog
 
 # MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
+TestResult*/
+[BuildLog].*
 
 # NUnit
 *.VisualState.xml
